@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="default">
+
+  <property file="build.properties" />
+
+
+
+  <!-- **************************************************** -->
+  <!-- Clean -->
+  <!-- **************************************************** -->
+  <target name="clean">
+    <delete dir="build" />
+  </target>
+
+
+
+  <!-- **************************************************** -->
+  <!-- Composer (required to run unit tests) -->
+  <!-- **************************************************** -->
+  <target name="composer">
+    <exec executable="wget" failonerror="true">
+      <arg value="-nc" />
+      <arg value="http://getcomposer.org/composer.phar" />
+    </exec>
+    <exec executable="php" failonerror="true">
+      <arg value="composer.phar" />
+      <arg value="install" />
+      <arg value="--dev" />
+    </exec>
+  </target>
+
+  <target name="clean_composer">
+    <delete dir="vendor" />
+    <delete file="composer.phar" />
+    <delete file="composer.lock" />
+  </target>
+
+
+
+  <!-- **************************************************** -->
+  <!-- Finds last revision and sets version property -->
+  <!-- **************************************************** -->
+  <target name="find_version">
+    <exec executable="bash" outputproperty="git.revision">
+      <arg value="-c" />
+      <arg value="git rev-list HEAD | wc -l" />
+    </exec>
+
+    <property name="version" value="${package.majorversion}.${git.revision}" />
+    <echo>Revision found: ${git.revision}</echo>
+    <echo>Version: ${version}</echo>
+  </target>
+
+
+
+  <!-- **************************************************** -->
+  <!-- Phar Package -->
+  <!-- **************************************************** -->
+  <target name="phar_package" depends="find_version">
+    <mkdir dir="build" />
+    <exec executable="bash">
+      <arg value="-c" />
+      <arg value="php phar-package.php ${build.dir} ${package.name} ${version}" />
+    </exec>
+  </target>
+
+
+
+  <!-- **************************************************** -->
+  <!-- Build targets -->
+  <!-- **************************************************** -->
+  <target name="default" depends="clean, clean_composer, composer, phar_package" />
+
+</project>

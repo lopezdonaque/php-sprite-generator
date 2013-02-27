@@ -17,6 +17,17 @@ ant composer
 ```
 
 
-## Usage
+## Build phar package
 
-*
+* Execute default ant target
+
+```
+ant
+```
+
+
+## Phar usage
+
+```
+php php-sprite-generator_1.0.2.phar generator:generate --help
+```
