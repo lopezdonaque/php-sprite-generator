@@ -147,7 +147,6 @@ class Generator
 
         break;
     }
-
   }
 
 
@@ -160,28 +159,20 @@ class Generator
     $this->_trace( 'Loading images from folder' );
     $this->_images = array();
 
-    if( $dir_contents = scandir( $this->_options->src_images_folder ) )
-    {
-      foreach( $dir_contents as $file )
-      {
-        $ext = strtolower( substr( $file, strrpos( $file, '.' ) + 1 ) );
+    $dir_contents = $this->_rscandir( $this->_options->src_images_folder );
 
-        // Ignore non-matching file extensions (it also ignores "." and "..")
-        if( in_array( $ext, $this->_accepted_filetypes ) )
-        {
-          $filepath = $this->_options->src_images_folder . '/' . $file;
-          $info = getimagesize( $filepath );
-          $this->_images[] = array
-          (
-            'filename' => pathinfo( $file, PATHINFO_FILENAME ),
-            'path' => $filepath,
-            'width' => $info[0],
-            'height' => $info[1],
-            'mime' => $info[ 'mime' ],
-            'type' => end( explode( '/', $info[ 'mime' ] ) )
-          );
-        }
-      }
+    foreach( $dir_contents as $file )
+    {
+      $info = getimagesize( $file );
+      $this->_images[] = array
+      (
+        'filename' => pathinfo( $file, PATHINFO_FILENAME ),
+        'path' => $file,
+        'width' => $info[0],
+        'height' => $info[1],
+        'mime' => $info[ 'mime' ],
+        'type' => end( explode( '/', $info[ 'mime' ] ) )
+      );
     }
   }
 
@@ -290,6 +281,46 @@ TEXT;
     }
 
     return $arr;
+  }
+
+
+
+  /**
+   * Recursively scan dir
+   *
+   * @param string $base
+   * @param array  $data
+   * @return array
+   */
+  private function _rscandir( $base = '', &$data = array() )
+  {
+    if( substr( $base, -1 ) != '/' )
+    {
+      $base .= '/';
+    }
+
+    $array = array_diff( scandir( $base ), array( '.', '..' ) ); // Remove "." and ".." from the array
+
+    foreach( $array as $value ) // Loop through the array at the level of the supplied $base
+    {
+      if( is_dir( $base . $value ) )
+      {
+        $data = $this->_rscandir( $base . $value . '/', $data );
+      }
+      elseif( is_file( $base . $value ) )
+      {
+        $file = $base . $value;
+        $ext = strtolower( substr( $file, strrpos( $file, '.' ) + 1 ) );
+
+        // Ignore non-matching file extensions (it also ignores "." and "..")
+        if( in_array( $ext, $this->_accepted_filetypes ) )
+        {
+          $data[] = $base . $value;
+        }
+      }
+    }
+
+    return $data;
   }
 
 
