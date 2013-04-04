@@ -24,8 +24,9 @@ class GeneratorCommand extends \Symfony\Component\Console\Command\Command
       ->addOption( 'css_filename', null, \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED, 'CSS filename' )
       ->addOption( 'css_save_path', null, \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED, 'CSS save path' )
       ->addOption( 'css_append', null, \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED, 'CSS append (default to false)' )
-      ->addOption( 'css_classname_prefix', null, \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED, 'CSS Classname prefix' )
-      ->addOption( 'css_url_prefix', null, \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED, 'CSS Url prefix' )
+      ->addOption( 'css_classname_prefix', null, \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED, 'CSS classname prefix' )
+      ->addOption( 'css_url_prefix', null, \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED, 'CSS URL prefix' )
+      ->addOption( 'css_template_file', null, \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED, 'CSS template file' )
       ->addOption( 'debug', null, \Symfony\Component\Console\Input\InputOption::VALUE_NONE, 'If set, enables trace messages' )
       ->setHelp( "Executes generator actions." );
   }
@@ -58,6 +59,7 @@ class GeneratorCommand extends \Symfony\Component\Console\Command\Command
     $options->css_append = $input->getOption( 'css_append' ) ?: false;
     $options->css_classname_prefix = $input->getOption( 'css_classname_prefix' );
     $options->css_url_prefix = $input->getOption( 'css_url_prefix' );
+    $options->css_template_file = $input->getOption( 'css_template_file' );
 
     $generator = new \SpriteGenerator\Generator( $options );
     $generator->output_image( \SpriteGenerator\Generator::OUTPUT_SAVE );

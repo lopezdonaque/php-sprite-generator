@@ -38,6 +38,23 @@
 
 
   <!-- **************************************************** -->
+  <!-- Unit tests -->
+  <!-- **************************************************** -->
+  <target name="unit_tests">
+    <apply executable="vendor/bin/phpunit" failonerror="true">
+      <arg value="--bootstrap" />
+      <arg value="${basedir}/tests/bootstrap.php" />
+      <arg value="--debug" /> <!-- Display debbuging information during test execution. -->
+
+      <fileset dir="${basedir}/tests/SpriteGeneratorTest" >
+        <include name="**/*.php" />
+      </fileset>
+    </apply>
+  </target>
+
+
+
+  <!-- **************************************************** -->
   <!-- Finds last revision and sets version property -->
   <!-- **************************************************** -->
   <target name="find_version">
@@ -69,6 +86,6 @@
   <!-- **************************************************** -->
   <!-- Build targets -->
   <!-- **************************************************** -->
-  <target name="default" depends="clean, clean_composer, composer, phar_package" />
+  <target name="default" depends="clean, clean_composer, composer, unit_tests, phar_package" />
 
 </project>

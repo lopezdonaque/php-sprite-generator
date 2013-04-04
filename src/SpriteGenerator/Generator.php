@@ -191,7 +191,13 @@ class Generator
     $top = $total[ 'height' ];
     $css = '';
 
-    $template = <<<TEXT
+    if( $this->_options->css_template_file && file_exists( $this->_options->css_template_file ) )
+    {
+      $template = file_get_contents( $this->_options->css_template_file );
+    }
+    else
+    {
+      $template = <<<TEXT
 .[classname_prefix][image_name]
 {
   background-image: url( [url_prefix][sprite_image_name] ) !important;
@@ -201,6 +207,7 @@ class Generator
   height: [h]px;
 }\n\n
 TEXT;
+    }
 
     foreach( $this->_images as $image )
     {

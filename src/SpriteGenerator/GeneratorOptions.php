@@ -116,4 +116,12 @@ class GeneratorOptions
    */
   public $css_url_prefix;
 
+
+  /**
+   * CSS Template file path
+   *
+   * @var string
+   */
+  public $css_template_file;
+
 }

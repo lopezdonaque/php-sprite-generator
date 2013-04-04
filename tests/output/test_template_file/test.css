@@ -1,0 +1,12 @@
+
+.prefix-user
+{
+  background-image: url( url-prefix-test.png ) !important;
+  background-position: 0px 0px !important;
+}
+
+.prefix-info
+{
+  background-image: url( url-prefix-test.png ) !important;
+  background-position: 0px -18px !important;
+}
